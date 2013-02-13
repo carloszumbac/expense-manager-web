@@ -9,11 +9,18 @@
 
 from django.db import models
 
+
+FREQUENCIES = {'1': 'week', '2': 'month'}
+
+
 class AndroidMetadata(models.Model):
     locale = models.TextField(primary_key=True)
 
     class Meta:
         db_table = u'android_metadata'
+
+    def __unicode__(self):
+        return "Locale: %s" %(self.locale)
 
 
 class ExpenseBudget(models.Model):
@@ -32,6 +39,9 @@ class ExpenseBudget(models.Model):
     class Meta:
         db_table = u'expense_budget'
 
+    def __unicode__(self):
+        return "Budget: %s for %s (%s) per %s" %("${:0,.0f}".format(float(self.amount)), self.category, self.subcategory, FREQUENCIES[self.frequency])
+
 
 class ExpenseCategory(models.Model):
     id = models.AutoField(primary_key=True, db_column='_id')
@@ -40,6 +50,9 @@ class ExpenseCategory(models.Model):
 
     class Meta:
         db_table = u'expense_category'
+
+    def __unicode__(self):
+        return "Category: %s (%s)" %(self.category, self.subcategory)
 
 
 class ExpenseNote(models.Model):
@@ -56,6 +69,9 @@ class ExpenseNote(models.Model):
 
     class Meta:
         db_table = u'expense_note'
+
+    def __unicode__(self):
+        return "Note: %s (%s)" %(self.note_title, self.note_content)
 
 
 class ExpensePayeePayer(models.Model):
@@ -76,6 +92,9 @@ class ExpensePayeePayer(models.Model):
     class Meta:
         db_table = u'expense_payee_payer'
 
+    def __unicode__(self):
+        return "Note: %s (%s)" %(self.payee_payer, self.account)
+
 
 class ExpensePreference(models.Model):
     id = models.AutoField(primary_key=True, db_column='_id')
@@ -85,6 +104,9 @@ class ExpensePreference(models.Model):
 
     class Meta:
         db_table = u'expense_preference'
+
+    def __unicode__(self):
+        return "Preference: %s (%s)" %(self.name, self.value)
 
 
 class ExpenseRepeating(models.Model):
@@ -130,5 +152,5 @@ class ExpenseReport(models.Model):
         db_table = u'expense_report'
 
     def __unicode__(self):
-        return str(self.expensed)
+        return "Expense: %s on %s (%s)" %("${:0,.0f}".format(float(self.amount)), self.category, self.subcategory)
 
